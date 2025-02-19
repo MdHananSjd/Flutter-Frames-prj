@@ -1,30 +1,43 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:hackathon_app/main.dart';
+import '../lib/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Fitness app smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify that the app title is displayed
+    expect(find.text('Fitness App'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Verify that we have four category cards
+    expect(find.byType(Card), findsNWidgets(4));
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify that we have the correct category titles
+    expect(find.text('Cardio'), findsOneWidget);
+    expect(find.text('Strength'), findsOneWidget);
+    expect(find.text('Yoga'), findsOneWidget);
+    expect(find.text('Stretching'), findsOneWidget);
+
+    // Tap the 'Cardio' card and trigger a frame.
+    await tester.tap(find.text('Cardio'));
+    await tester.pumpAndSettle();
+
+    // Verify that we've navigated to the Workout Details screen
+    expect(find.text('Cardio Workouts'), findsOneWidget);
+
+    // Navigate back to the home screen
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+
+    // Tap the profile icon
+    await tester.tap(find.byIcon(Icons.person));
+    await tester.pumpAndSettle();
+
+    // Verify that we've navigated to the Profile screen
+    expect(find.text('Profile'), findsOneWidget);
+    expect(find.text('John Doe'), findsOneWidget);
   });
 }
+
